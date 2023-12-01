@@ -7,6 +7,7 @@ import br.com.zup.edu.petmanager.repository.PetRepository;
 import br.com.zup.edu.petmanager.util.MensagemDeErro;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,7 +28,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(printOnlyOnFailure = false)
 @ActiveProfiles("teste") //executa testes no banco especifico para isso
 
 class CadastrarPetControllerTest {
@@ -45,6 +46,7 @@ class CadastrarPetControllerTest {
     }
 
     @Test
+    @DisplayName("deve cadastrar um pet")
     void cadastraPetComDadosValidos() throws Exception {
         // Cenário
         PetRequest petRequest = new PetRequest("Chico", "Schitzu", TipoPetRequest.CAO, LocalDate.parse("2021-03-04"));
@@ -67,6 +69,7 @@ class CadastrarPetControllerTest {
     }
 
     @Test
+    @DisplayName("nao deve cadastrar um pet com dados invalidos")
     void cadastraPetComDadosInvalidos() throws Exception {
         // Cenário
         PetRequest petRequest = new PetRequest(null, "", null,  null);
