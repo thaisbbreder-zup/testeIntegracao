@@ -100,7 +100,7 @@ class CadastrarPetControllerTest {
     }
 
     @Test
-    @DisplayName("nao deve cadastrar um pet com dados invalidos")
+    @DisplayName("nao deve cadastrar um pet com data de nascimento no presente ou futuro")
     void cadastraPetComDataDeNascimentoInvalida() throws Exception {
         // Cenário
         PetRequest petRequest = new PetRequest("Chico", "Schitzu", TipoPetRequest.CAO,LocalDate.now());
