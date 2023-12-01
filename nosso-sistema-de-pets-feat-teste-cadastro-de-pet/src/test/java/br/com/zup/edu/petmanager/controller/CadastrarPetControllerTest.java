@@ -98,4 +98,32 @@ class CadastrarPetControllerTest {
                 "O campo nome não deve estar em branco"
         ));
     }
+
+    @Test
+    @DisplayName("nao deve cadastrar um pet com dados invalidos")
+    void cadastraPetComDataDeNascimentoInvalida() throws Exception {
+        // Cenário
+        PetRequest petRequest = new PetRequest("Chico", "Schitzu", TipoPetRequest.CAO,LocalDate.now());
+
+        String payload = mapper.writeValueAsString(petRequest);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/api/v1/pets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload)
+                .header("Accept-Language", "pt-br");
+
+        // Ação
+        String payloadResponse = mockMvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn()
+                .getResponse()
+                .getContentAsString(UTF_8);
+
+        //corretude
+        MensagemDeErro mensagemDeErro = mapper.readValue(payloadResponse, MensagemDeErro.class);
+
+        assertEquals(1, mensagemDeErro.getMensagens().size());
+        assertThat(mensagemDeErro.getMensagens(), containsInAnyOrder(
+                "O campo dataNascimento deve ser uma data passada"
+        ));
+    }
     }
