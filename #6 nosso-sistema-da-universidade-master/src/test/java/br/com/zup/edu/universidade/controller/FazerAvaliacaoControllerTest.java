@@ -78,11 +78,14 @@ class FazerAvaliacaoControllerTest {
     @Test
     @DisplayName("um aluno deve responder a avaliacao")
     void alunoValidoTest() throws Exception {
-        String resposta = "qualquer coisa quero zerar";
-        List<RespostaQuestaoRequest> questoesRequest = questoes.stream()
+        String resposta = "Bill Gates";
+        //Cria uma lista de objetos RespostaQuestaoRequest com base nas questões disponiveis
+        List<RespostaQuestaoRequest> questoesRequest = questoes.stream() //stream permite operações funcionais em seus elementos(filter, map, sorted..)
+                //aplica a função especificada a cada elemento da stream e retorna uma nova stream com os resultados
                 .map(q -> new RespostaQuestaoRequest(q.getId(), resposta))
                 .collect(Collectors.toList());
 
+        // Cria uma solicitação de avaliação do aluno, utilizando as respostas criadas anteriormente
         AvaliacaoAlunoRequest avaliacaoAlunoRequest = new AvaliacaoAlunoRequest(questoesRequest);
 
         String payload = mapper.writeValueAsString(avaliacaoAlunoRequest);
@@ -105,7 +108,7 @@ class FazerAvaliacaoControllerTest {
                 //Obtém a URL do cabeçalho de localização da resposta
                 .getHeader("location");
 
-        //Extrai o ID da resposta da URL obtida.
+        //Extrai o ID da resposta da URL obtida
         String idResposta = location.substring(location.lastIndexOf("/") + 1);
 
         //Verifica se a resposta foi salva no banco de dados
@@ -131,12 +134,10 @@ class FazerAvaliacaoControllerTest {
     void alunoNaoCadastradoTest() throws Exception {
         String resposta = "Bill Gates";
 
-        // Cria uma lista de solicitações de resposta para cada questão, mapeando todas as questões existentes
         List<RespostaQuestaoRequest> questoesRequest = questoes.stream()
                 .map(x -> new RespostaQuestaoRequest(x.getId(), resposta))
                 .collect(Collectors.toList());
 
-        // Cria uma solicitação de avaliação do aluno, utilizando as respostas criadas anteriormente
         AvaliacaoAlunoRequest avaliacaoAlunoRequest = new AvaliacaoAlunoRequest(questoesRequest);
 
         String payload = mapper.writeValueAsString(avaliacaoAlunoRequest);
@@ -165,15 +166,15 @@ class FazerAvaliacaoControllerTest {
     void avaliacaoNaoCadastradoTest() throws Exception {
         String resposta = "Bill Gates";
 
-         List<RespostaQuestaoRequest> questoesRequest = questoes.stream()
+        List<RespostaQuestaoRequest> questoesRequest = questoes.stream()
                 .map(q -> new RespostaQuestaoRequest(q.getId(), resposta))
                 .collect(Collectors.toList());
 
-         AvaliacaoAlunoRequest avaliacaoAlunoRequest = new AvaliacaoAlunoRequest(questoesRequest);
+        AvaliacaoAlunoRequest avaliacaoAlunoRequest = new AvaliacaoAlunoRequest(questoesRequest);
 
         String payload = mapper.writeValueAsString(avaliacaoAlunoRequest);
 
-        MockHttpServletRequestBuilder request = post("/alunos/{id}/avaliacoes/{idAvaliacao}/respostas",  aluno.getId(), Integer.MAX_VALUE)
+        MockHttpServletRequestBuilder request = post("/alunos/{id}/avaliacoes/{idAvaliacao}/respostas", aluno.getId(), Integer.MAX_VALUE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload);
 
@@ -193,9 +194,3 @@ class FazerAvaliacaoControllerTest {
     }
 }
 
-
-
-//avaliacao nao cadastrada
-//avaliacao com dados invelidos
-//aluno cadastrado
-//questao na existe
