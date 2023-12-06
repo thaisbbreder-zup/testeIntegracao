@@ -1,1 +1,0 @@
-create schema pet_test;
